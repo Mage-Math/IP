@@ -145,7 +145,7 @@
       padding: 16px;
       border-radius: 12px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       margin: 16px 0;
     }
 
@@ -309,14 +309,15 @@
       </div>
 
       <div class="example-box">
-        1 painter × 12 hours = <strong>12 total work-hours</strong><br>
-        2 painters × 6 hours = <strong>12 total work-hours</strong>
+        <strong>Building a Wall:</strong><br>
+        1 worker × 30 days = <strong>30 worker-days</strong><br>
+        2 workers × 15 days = <strong>30 worker-days</strong>
       </div>
 
-      <p>Let's practice: If <strong>3 workers</strong> take <strong>10 days</strong> to build a wall, what is the constant total work required (<span style="color:var(--primary); font-weight:bold;">k</span>)?</p>
+      <p>Let's practice: If <strong>3 workers</strong> take <strong>10 days</strong>, what is the constant total work required (<span style="color:var(--primary); font-weight:bold;">k</span>)?</p>
 
       <div style="text-align: center; margin: 16px 0;">
-        3 workers × 10 days = <input type="number" id="p2-input" placeholder="?" /> total days
+        3 workers × 10 days = <input type="number" id="p2-input" placeholder="?" /> total worker-days
       </div>
 
       <button class="btn-primary" onclick="checkP2()">Check Answer</button>
@@ -444,7 +445,7 @@
       const fb = document.getElementById('fb-2');
       if (val === 30) {
         fb.className = "feedback correct";
-        fb.innerHTML = "✅ Perfect! k = 30 total days of work. This product remains constant!";
+        fb.innerHTML = "✅ Perfect! k = 30 total worker-days. This product remains constant!";
         document.getElementById('next-2').disabled = false;
         document.getElementById('dot-2').classList.add('done');
       } else {
