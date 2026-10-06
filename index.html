@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Understanding Inverse Proportion Easily</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --primary: #8b5cf6;
+      --primary-light: #f3e8ff;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --error: #dc2626;
+      --error-bg: #fef2f2;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      line-height: 1.6;
+      margin: 0;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: var(--primary);
+      margin-bottom: 4px;
+      font-size: 1.5rem;
+    }
+
+    p.subtitle {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Progress Dots */
+    .tracker {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .tracker::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 8%;
+      right: 8%;
+      height: 3px;
+      background: var(--border);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: var(--text-muted);
+      z-index: 2;
+      transition: all 0.3s;
+    }
+
+    .step-dot.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .step-dot.done {
+      border-color: var(--success);
+      background: var(--success);
+      color: white;
+    }
+
+    /* Page Cards */
+    .card {
+      display: none;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card.active {
+      display: block;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--text-dark);
+    }
+
+    .teacher-note {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+      font-size: 0.95rem;
+    }
+
+    .example-box {
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.1rem;
+      margin: 16px 0;
+    }
+
+    /* Quiz Choices */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .btn-option {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .btn-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    input[type="number"] {
+      width: 90px;
+      padding: 8px;
+      font-size: 1.1rem;
+      text-align: center;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+    }
+
+    /* Navigation */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-primary:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text-dark);
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Feedback Alerts */
+    .feedback {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      display: none;
+    }
+
+    .feedback.correct {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .feedback.wrong {
+      display: block;
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid #fecaca;
+    }
+
+    canvas {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      width: 100%;
+      height: 220px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Inverse Proportion</h1>
+      <p class="subtitle">More workers = Less time!</p>
+    </header>
+
+    <!-- Progress Dots -->
+    <div class="tracker">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-dot" id="dot-4">4</div>
+      <div class="step-dot" id="dot-5">5</div>
+    </div>
+
+    <!-- PAGE 1: The Core Idea -->
+    <div class="card active" id="card-1">
+      <span class="badge">Page 1: The Everyday Idea</span>
+      <h2>Painting a Fence 🎨</h2>
+      
+      <div class="teacher-note">
+        <strong>Teacher's Hint:</strong> Inverse proportion means: <em>"When one quantity goes UP, the other goes DOWN at the exact same rate!"</em>
+      </div>
+
+      <div class="example-box">
+        <strong>1 painter</strong> takes <strong>12 hours</strong> to paint a fence.<br>
+        <strong>2 painters</strong> take <strong>6 hours</strong> to paint the same fence!
+      </div>
+
+      <p>If you hire <strong>4 painters</strong>, what happens to the time needed?</p>
+
+      <div class="options">
+        <button class="btn-option" onclick="checkP1(this, 3)">3 hours (More helpers means much less time!)</button>
+        <button class="btn-option" onclick="checkP1(this, 24)">24 hours (It takes more time)</button>
+        <button class="btn-option" onclick="checkP1(this, 12)">12 hours (The time stays the same)</button>
+      </div>
+
+      <div id="fb-1" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn-secondary" disabled>Back</button>
+        <button class="btn-primary" id="next-1" onclick="goPage(2)" disabled>Next Step →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 2: The Constant Product (k) -->
+    <div class="card" id="card-2">
+      <span class="badge">Page 2: The Magic Total</span>
+      <h2>Finding the Constant Total (k) 🔑</h2>
+
+      <div class="teacher-note">
+        In inverse proportion, multiplying the two numbers together <strong>always gives the exact same result</strong> (<span style="color:var(--primary); font-weight:bold;">k</span>)!
+      </div>
+
+      <div class="example-box">
+        1 painter × 12 hours = <strong>12 total work-hours</strong><br>
+        2 painters × 6 hours = <strong>12 total work-hours</strong>
+      </div>
+
+      <p>Let's practice: If <strong>3 workers</strong> take <strong>10 days</strong> to build a wall, what is the constant total work required (<span style="color:var(--primary); font-weight:bold;">k</span>)?</p>
+
+      <div style="text-align: center; margin: 16px 0;">
+        3 workers × 10 days = <input type="number" id="p2-input" placeholder="?" /> total days
+      </div>
+
+      <button class="btn-primary" onclick="checkP2()">Check Answer</button>
+      <div id="fb-2" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn-secondary" onclick="goPage(1)">Back</button>
+        <button class="btn-primary" id="next-2" onclick="goPage(3)" disabled>Next Step →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 3: The Simple Math Formula -->
+    <div class="card" id="card-3">
+      <span class="badge">Page 3: The Easy Formula</span>
+      <h2>Writing the Formula 📝</h2>
+
+      <div class="teacher-note">
+        To find the time or amount needed (<span style="color:var(--primary); font-weight:bold;">y</span>), divide the total work (<span style="color:var(--primary); font-weight:bold;">k</span>) by the number of helpers (<span style="color:var(--primary); font-weight:bold;">x</span>):
+      </div>
+
+      <div class="example-box" style="font-size: 1.3rem; color: var(--primary);">
+        <strong>y = k ÷ x</strong> &nbsp;or&nbsp; <strong>y = <sup>k</sup>&frasl;<sub>x</sub></strong><br>
+        <span style="font-size: 0.9rem; color: var(--text-dark);">(Time = Total Work ÷ Helpers)</span>
+      </div>
+
+      <p>If the total work is <strong>k = 24</strong>, how many hours will it take <strong>6 workers</strong>?</p>
+
+      <div style="text-align: center; margin: 16px 0;">
+        y = 24 ÷ 6 = <input type="number" id="p3-input" placeholder="?" /> hours
+      </div>
+
+      <button class="btn-primary" onclick="checkP3()">Calculate</button>
+      <div id="fb-3" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn-secondary" onclick="goPage(2)">Back</button>
+        <button class="btn-primary" id="next-3" onclick="goPage(4)" disabled>Next Step →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 4: Solving a Problem -->
+    <div class="card" id="card-4">
+      <span class="badge">Page 4: Real-World Example</span>
+      <h2>Road Trip Speed 🚗</h2>
+
+      <p>A car traveling at <strong>60 mph</strong> takes <strong>2 hours</strong> to reach a city.</p>
+
+      <p><strong>Step 1:</strong> Find the total distance (<span style="color:var(--primary); font-weight:bold;">k = speed × time</span>):</p>
+      <div style="text-align: center; margin-bottom: 12px;">
+        60 × 2 = <input type="number" id="p4-k" placeholder="miles" /> miles
+      </div>
+
+      <p><strong>Step 2:</strong> If you drive faster at <strong>120 mph</strong>, how long will the trip take (<span style="color:var(--primary); font-weight:bold;">y = k ÷ x</span>)?</p>
+      <div style="text-align: center; margin-bottom: 12px;">
+        Time = 120 miles ÷ 120 mph = <input type="number" id="p4-ans" placeholder="hours" /> hour(s)
+      </div>
+
+      <button class="btn-primary" onclick="checkP4()">Check Steps</button>
+      <div id="fb-4" class="feedback"></div>
+
+      <div class="controls">
+        <button class="btn-secondary" onclick="goPage(3)">Back</button>
+        <button class="btn-primary" id="next-4" onclick="goPage(5)" disabled>Next Step →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 5: The Curved Graph -->
+    <div class="card" id="card-5">
+      <span class="badge">Page 5: The Curve</span>
+      <h2>What does it look like on a Graph? 📈</h2>
+
+      <div class="teacher-note">
+        <strong>2 Golden Rules of Inverse Proportion Graphs:</strong>
+        <ol>
+          <li>It forms a <strong>downward curve</strong> (called a hyperbola).</li>
+          <li>It <strong>never touches zero</strong> because having 0 helpers means the job is never finished!</li>
+        </ol>
+      </div>
+
+      <canvas id="inverseGraph" width="300" height="180"></canvas>
+
+      <div id="fb-5" class="feedback correct" style="display:block; margin-top:16px;">
+        🎉 Awesome Job! You now master inverse proportion: <strong>y = k ÷ x</strong>
+      </div>
+
+      <div class="controls">
+        <button class="btn-secondary" onclick="goPage(4)">Back</button>
+        <button class="btn-primary" onclick="location.reload()">Start Over 🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+
+    function goPage(page) {
+      document.getElementById(`card-${currentPage}`).classList.remove('active');
+      document.getElementById(`dot-${currentPage}`).classList.remove('active');
+
+      currentPage = page;
+
+      document.getElementById(`card-${currentPage}`).classList.add('active');
+      document.getElementById(`dot-${currentPage}`).classList.add('active');
+
+      if (currentPage === 5) {
+        drawGraph();
+      }
+    }
+
+    function checkP1(btn, val) {
+      const fb = document.getElementById('fb-1');
+      if (val === 3) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Spot on! Doubling workers from 2 to 4 cuts the time in half from 6 to 3 hours.";
+        document.getElementById('next-1').disabled = false;
+        document.getElementById('dot-1').classList.add('done');
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Think about it: if more people help, does it take more or less time?";
+      }
+    }
+
+    function checkP2() {
+      const val = parseFloat(document.getElementById('p2-input').value);
+      const fb = document.getElementById('fb-2');
+      if (val === 30) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Perfect! k = 30 total days of work. This product remains constant!";
+        document.getElementById('next-2').disabled = false;
+        document.getElementById('dot-2').classList.add('done');
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Multiply 3 workers by 10 days (3 × 10).";
+      }
+    }
+
+    function checkP3() {
+      const val = parseFloat(document.getElementById('p3-input').value);
+      const fb = document.getElementById('fb-3');
+      if (val === 4) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Correct! y = 24 ÷ 6 = 4 hours.";
+        document.getElementById('next-3').disabled = false;
+        document.getElementById('dot-3').classList.add('done');
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Divide 24 by 6 (24 ÷ 6).";
+      }
+    }
+
+    function checkP4() {
+      const k = parseFloat(document.getElementById('p4-k').value);
+      const ans = parseFloat(document.getElementById('p4-ans').value);
+      const fb = document.getElementById('fb-4');
+
+      if (k === 120 && ans === 1) {
+        fb.className = "feedback correct";
+        fb.innerHTML = "✅ Fantastic! Distance = 120 miles. Driving at 120 mph takes just 1 hour.";
+        document.getElementById('next-4').disabled = false;
+        document.getElementById('dot-4').classList.add('done');
+        document.getElementById('dot-5').classList.add('done');
+      } else {
+        fb.className = "feedback wrong";
+        fb.innerHTML = "❌ Step 1: 60 × 2 = 120. Step 2: 120 ÷ 120 = 1.";
+      }
+    }
+
+    function drawGraph() {
+      const canvas = document.getElementById('inverseGraph');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Axes
+      ctx.strokeStyle = "#94a3b8";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(30, 20);
+      ctx.lineTo(30, 150);
+      ctx.lineTo(280, 150);
+      ctx.stroke();
+
+      // Hyperbola Curve for y = k / x
+      ctx.strokeStyle = "#8b5cf6";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      
+      const k = 2000;
+      let started = false;
+
+      for (let x = 10; x <= 240; x += 2) {
+        let canvasX = 30 + x;
+        let yVal = k / x;
+        let canvasY = 150 - yVal;
+
+        if (canvasY >= 20 && canvasY <= 150) {
+          if (!started) {
+            ctx.moveTo(canvasX, canvasY);
+            started = true;
+          } else {
+            ctx.lineTo(canvasX, canvasY);
+          }
+        }
+      }
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = "#1e293b";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText("Downward Curve", 110, 50);
+      ctx.fillText("Helpers (x) →", 180, 170);
+      ctx.fillText("Time (y)", 35, 20);
+    }
+  </script>
+</body>
+</html>
